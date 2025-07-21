@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Sinh Viên - Responsive</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+        }
+        
+        header {
+            background-color: #3498db;
+            color: white;
+            padding: 16px 24px;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: row;
+            padding: 24px;
+            gap: 24px;
+        }
+        
+        form {
+            flex: 1;
+            background-color: #fff;
+            padding: 24px;
+            border: 2px solid #000;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        form label {
+            display: block;
+            margin-top: 14px;
+            font-weight: 600;
+        }
+        
+        form input[type="text"],
+        form input[type="email"],
+        form input[type="date"],
+        form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        form input[type="radio"] {
+            margin-top: 10px;
+            margin-right: 6px;
+        }
+        
+        form textarea {
+            resize: vertical;
+        }
+        
+        form button {
+            margin-top: 20px;
+            padding: 10px 24px;
+            background-color: #038e4d;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        form button:hover {
+            background-color: #026c3a;
+        }
+        
+        .table-container {
+            flex: 2;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        th,
+        td {
+            padding: 14px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        th {
+            background-color: #2980b9;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9fbfc;
+        }
+        
+        tbody tr:hover {
+            background-color: #e6f2ff;
+            text-decoration: underline;
+        }
+        
+        a {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>Quản Lý Sinh Viên</header>
+
+    <div class="container">
+        <!-- Form bên trái -->
+        <form>
+            <h2>Thêm Sinh Viên</h2>
+            <label for="maSV">Mã sinh viên:</label>
+            <input type="text" id="maSV" name="maSV" required>
+
+            <label for="hoTen">Họ và tên:</label>
+            <input type="text" id="hoTen" name="hoTen" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="ngaySinh">Ngày sinh:</label>
+            <input type="date" id="ngaySinh" name="ngaySinh">
+
+            <label>Giới tính:</label>
+            <input type="radio" id="nam" name="gioiTinh" value="Nam">
+            <label for="nam" style="display:inline;">Nam</label>
+            <input type="radio" id="nu" name="gioiTinh" value="Nữ">
+            <label for="nu" style="display:inline;">Nữ</label>
+
+            <label for="ghiChu">Ghi chú:</label>
+            <textarea id="ghiChu" name="ghiChu" rows="3"></textarea>
+
+            <button type="submit">Thêm sinh viên</button>
+        </form>
+
+        <!-- Bảng bên phải -->
+        <div class="table-container">
+            <h2>Danh Sách Sinh Viên</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã SV</th>
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th>Giới tính</th>
+                        <th>Ngày sinh</th>
+                        <th>Tùy chọn</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>SV001</td>
+                        <td>Nguyễn Văn A</td>
+                        <td>nguyenvana@example.com</td>
+                        <td>Nam</td>
+                        <td>2000-01-01</td>
+                        <td><a href="#">Sửa</a> | <a href="#">Xóa</a></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>SV002</td>
+                        <td>Trần Thị B</td>
+                        <td>tranthib@example.com</td>
+                        <td>Nữ</td>
+                        <td>2001-05-12</td>
+                        <td><a href="#">Sửa</a> | <a href="#">Xóa</a></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>SV003</td>
+                        <td>Lê Văn C</td>
+                        <td>levanc@example.com</td>
+                        <td>Nam</td>
+                        <td>1999-09-30</td>
+                        <td><a href="#">Sửa</a> | <a href="#">Xóa</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>
