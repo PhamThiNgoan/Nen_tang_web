@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Sinh Viên</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+        }
+        
+        header {
+            background-color: #3498db;
+            color: white;
+            padding: 16px 24px;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: row;
+            padding: 24px;
+            gap: 24px;
+        }
+        
+        form {
+            flex: 1;
+            background-color: #fff;
+            padding: 24px;
+            border: 2px solid #000;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        form label {
+            display: block;
+            margin-top: 14px;
+            font-weight: 600;
+        }
+        
+        form input[type="text"],
+        form input[type="email"],
+        form input[type="date"],
+        form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        form input[type="radio"] {
+            margin-top: 10px;
+            margin-right: 6px;
+        }
+        
+        form textarea {
+            resize: vertical;
+        }
+        
+        form button {
+            margin-top: 20px;
+            padding: 10px 24px;
+            background-color: #038e4d;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        form button:hover {
+            background-color: #026c3a;
+        }
+        
+        .table-container {
+            flex: 2;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        th,
+        td {
+            padding: 14px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        th {
+            background-color: #2980b9;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9fbfc;
+        }
+        
+        tbody tr:hover {
+            background-color: #e6f2ff;
+            text-decoration: underline;
+        }
+        
+        a {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        #message {
+            margin-top: 12px;
+            font-weight: bold;
+            color: green;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>Quản Lý Sinh Viên</header>
+
+    <div class="container">
+        <form id="studentForm">
+            <h2 id="formTitle">Thêm Sinh Viên</h2>
+            <label for="maSV">Mã sinh viên:</label>
+            <input type="text" id="maSV" required />
+
+            <label for="hoTen">Họ và tên:</label>
+            <input type="text" id="hoTen" required />
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" required />
+
+            <label for="ngaySinh">Ngày sinh:</label>
+            <input type="date" id="ngaySinh" />
+
+            <label>Giới tính:</label>
+            <input type="radio" name="gioiTinh" value="Nam" id="nam" checked />
+            <label for="nam" style="display:inline;">Nam</label>
+            <input type="radio" name="gioiTinh" value="Nữ" id="nu" />
+            <label for="nu" style="display:inline;">Nữ</label>
+
+            <div id="message"></div>
+
+            <button type="submit">Lưu</button>
+        </form>
+
+        <div class="table-container">
+            <h2>📋Danh Sách Sinh Viên</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã SV</th>
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th>Giới tính</th>
+                        <th>Ngày sinh</th>
+                        <th>Tùy chọn</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById("studentForm");
+        const tableBody = document.getElementById("studentTableBody");
+        const messageDiv = document.getElementById("message");
+        const formTitle = document.getElementById("formTitle");
+
+        let students = [];
+        let editingIndex = -1;
+
+        function saveData() {
+            localStorage.setItem("students", JSON.stringify(students));
+        }
+
+        function loadData() {
+            const data = localStorage.getItem("students");
+            if (data) {
+                students = JSON.parse(data);
+            } else {
+                // Dữ liệu mẫu mặc định
+                students = [{
+                    maSV: "SV001",
+                    hoTen: "Nguyễn Văn A",
+                    email: "a@gmail.com",
+                    gioiTinh: "Nam",
+                    ngaySinh: "2001-01-01"
+                }, {
+                    maSV: "SV002",
+                    hoTen: "Trần Thị B",
+                    email: "b@gmail.com",
+                    gioiTinh: "Nữ",
+                    ngaySinh: "2002-02-02"
+                }, {
+                    maSV: "SV003",
+                    hoTen: "Lê Thị C",
+                    email: "c@gmail.com",
+                    gioiTinh: "Nữ",
+                    ngaySinh: "2000-08-03"
+
+                }];
+                saveData();
+            }
+            renderTable();
+        }
+
+        function renderTable() {
+            tableBody.innerHTML = "";
+            students.forEach((sv, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${sv.maSV}</td>
+        <td>${sv.hoTen}</td>
+        <td>${sv.email}</td>
+        <td>${sv.gioiTinh}</td>
+        <td>${sv.ngaySinh}</td>
+        <td>
+          <a href="#" class="edit" data-index="${index}">✏️ Sửa</a> |
+          <a href="#" class="delete" data-index="${index}">🗑️Xóa</a>
+        </td>
+      `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function validateForm(maSV, hoTen, email) {
+            if (!maSV || !hoTen || !email) {
+                showMessage("Vui lòng nhập đầy đủ thông tin!", "red");
+                return false;
+            }
+            if (hoTen.trim().length < 3) {
+                showMessage("Họ tên quá ngắn!", "red");
+                return false;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showMessage("Email không hợp lệ!", "red");
+                return false;
+            }
+            return true;
+        }
+
+        function showMessage(msg, color = "green") {
+            messageDiv.innerText = msg;
+            messageDiv.style.color = color;
+            setTimeout(() => {
+                messageDiv.innerText = "";
+            }, 2500);
+        }
+
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const maSV = document.getElementById("maSV").value.trim();
+            const hoTen = document.getElementById("hoTen").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const ngaySinh = document.getElementById("ngaySinh").value;
+            const gioiTinh = document.querySelector('input[name="gioiTinh"]:checked').value;
+
+            if (!validateForm(maSV, hoTen, email)) return;
+
+            const student = {
+                maSV,
+                hoTen,
+                email,
+                gioiTinh,
+                ngaySinh
+            };
+
+            if (editingIndex === -1) {
+                students.push(student);
+                showMessage("Đã thêm sinh viên thành công!");
+            } else {
+                students[editingIndex] = student;
+                showMessage("Cập nhật sinh viên thành công!");
+                formTitle.innerText = "Thêm Sinh Viên";
+                editingIndex = -1;
+            }
+
+            saveData();
+            renderTable();
+            form.reset();
+        });
+
+        tableBody.addEventListener("click", function(e) {
+            e.preventDefault();
+            const target = e.target;
+            const index = target.getAttribute("data-index");
+            if (target.classList.contains("delete")) {
+                if (confirm("Bạn có chắc muốn xóa sinh viên này?")) {
+                    students.splice(index, 1);
+                    saveData();
+                    renderTable();
+                    showMessage("Đã xóa sinh viên!", "green");
+                }
+            } else if (target.classList.contains("edit")) {
+                const sv = students[index];
+                document.getElementById("maSV").value = sv.maSV;
+                document.getElementById("hoTen").value = sv.hoTen;
+                document.getElementById("email").value = sv.email;
+                document.getElementById("ngaySinh").value = sv.ngaySinh;
+                document.getElementById(sv.gioiTinh === "Nam" ? "nam" : "nu").checked = true;
+                formTitle.innerText = "Cập Nhật Sinh Viên";
+                editingIndex = index;
+            }
+        });
+
+
+        loadData();
+    </script>
+
+</body>
+
+</html>

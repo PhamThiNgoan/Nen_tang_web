@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kiểm Tra Thông Tin Nhân Viên</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 40px;
+        }
+        
+        h2 {
+            text-align: center;
+        }
+        
+        form {
+            background-color: #fff;
+            max-width: 400px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        label {
+            font-weight: bold;
+            margin-top: 12px;
+            display: block;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .error {
+            color: red;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+        
+        button {
+            margin-top: 15px;
+            padding: 10px;
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Form Nhập Thông Tin Nhân Viên</h2>
+
+    <form onsubmit="return validateEmployee()">
+        <label for="name">Họ tên:</label>
+        <input type="text" id="name">
+        <div class="error" id="nameError"></div>
+
+        <label for="email">Email:</label>
+        <input type="text" id="email">
+        <div class="error" id="emailError"></div>
+
+        <label for="phone">Số điện thoại:</label>
+        <input type="text" id="phone">
+        <div class="error" id="phoneError"></div>
+
+        <button type="submit">Gửi</button>
+    </form>
+
+    <script>
+        function validateEmployee() {
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+
+            const nameError = document.getElementById("nameError");
+            const emailError = document.getElementById("emailError");
+            const phoneError = document.getElementById("phoneError");
+
+            // Reset lỗi
+            nameError.innerText = "";
+            emailError.innerText = "";
+            phoneError.innerText = "";
+
+            let isValid = true;
+
+            // Kiểm tra họ tên
+            if (name === "") {
+                nameError.innerText = "Họ tên không được để trống.";
+                isValid = false;
+            }
+
+            // Kiểm tra email
+            if (email === "") {
+                emailError.innerText = "Email không được để trống.";
+                isValid = false;
+            }
+
+            // Kiểm tra số điện thoại
+            if (phone === "") {
+                phoneError.innerText = "Số điện thoại không được để trống.";
+                isValid = false;
+            } else if (!/^0\d{9}$/.test(phone)) {
+                phoneError.innerText = "Số điện thoại phải bắt đầu bằng 0 và có đúng 10 ký tự.";
+                isValid = false;
+            }
+
+            return isValid;
+        }
+    </script>
+</body>
+
+</html>
